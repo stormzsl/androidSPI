@@ -28,4 +28,4 @@
   pushAarToJCenter.gradle是上传到JCenter仓库的脚本. 在要上传的module中引入即可,
   在控制套执行:./gradlew :testuploadaartojcenter:bintrayUpload
   
-  5.maven仓库托管地址:https://bintray.com/stormzslwly，JCenter仓库地址:https://bintray.com/fastenorg
+  5.maven仓库托管地址:https://bintray.com/stormzslwly，JCenter仓库地址:https://bintray.com/fastenorg,该项目相关的地址:https://bintray.com/beta/#/fastenorg/androidSPI?tab=packages
