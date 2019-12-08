@@ -1,4 +1,3 @@
-rootProject.name='ComponentTransport'
 include ':app'
 include ':testuploadaar'
 include ':testuploadJar'
