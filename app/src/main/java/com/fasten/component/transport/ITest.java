@@ -8,5 +8,6 @@ import com.fasten.component.spi.annotations.ServiceProviderInterface;
 @ServiceProviderInterface
 public interface ITest {
 
+
     void printMessage(String msg);
 }

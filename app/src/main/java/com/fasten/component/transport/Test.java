@@ -6,6 +6,7 @@ import com.fasten.component.spi.annotations.ServiceProvider;
  */
 @ServiceProvider(ITest.class)
 public class Test implements ITest{
+   public static String hello="hello";
 
     @Override
     public void printMessage(String msg) {

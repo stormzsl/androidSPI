@@ -1,2 +1,3 @@
 com.fasten.component.spi.processor.ServiceProviderInterfaceProcessor
 com.fasten.component.spi.processor.JavepoteProcessor
+com.fasten.component.spi.processor.GenerateMatchClassProcessor
