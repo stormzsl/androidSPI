@@ -1,0 +1,18 @@
+apply plugin: 'java-library'
+apply plugin: 'groovy'
+// 1.上传到远程仓库
+//apply from:"${rootDir.absolutePath}/gradle/pushJarToJCenter.gradle"
+
+//2.上传到本地项目目录
+apply from:"${rootDir.absolutePath}/gradle/uploadJarLocalDir.gradle"
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation gradleApi()
+    implementation localGroovy()
+
+    implementation 'org.javassist:javassist:3.18.2-GA'
+    implementation 'com.squareup:javapoet:1.7.0'
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"

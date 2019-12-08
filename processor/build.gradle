@@ -1,0 +1,21 @@
+apply plugin: 'java-library'
+
+// 1.上传到远程仓库
+//apply from:"${rootDir.absolutePath}/gradle/pushJarToJCenter.gradle"
+
+//2.上传到本地项目目录
+apply from:"${rootDir.absolutePath}/gradle/uploadJarLocalDir.gradle"
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //这里真是被坑死了，在gradle高版本5.*.*中自动注册没用，改为手动注册
+//    implementation 'com.google.auto.service:auto-service:1.0-rc6'
+    implementation 'com.fasten.component.spi:annotations:1.0.0'
+    implementation 'com.squareup:javapoet:1.7.0'
+
+    implementation 'com.fasten.component.spi:loader:1.0.0'
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
