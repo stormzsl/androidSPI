@@ -62,22 +62,28 @@ public class ServiceProviderInterfaceProcessor extends AbstractProcessor {
                 final TypeElement typeElement = (TypeElement) element;
                 final String packageName = getPackageName(typeElement);
                 mMessager.printMessage(Diagnostic.Kind.WARNING,"packageName>>>>>");
-                final ClassName clazzSpi = ClassName.get(typeElement);
-                final ClassName clazzLoader = ClassName.get(getClass().getPackage().getName(), "ServiceLoader");
+                final ClassName clazzServiceProviderInterface = ClassName.get(typeElement);
+                final ClassName clazzServiceLoader = ClassName.get(getServiceLoaderPackageName(), "ServiceLoader");
+
+                mMessager.printMessage(Diagnostic.Kind.WARNING,"clazzServiceLoader>>>>>"+clazzServiceLoader.packageName()+"::"+clazzServiceLoader.simpleName());
+
                 final ClassName clazzService = ClassName.get(packageName, getServiceName(typeElement));
+
                 final ClassName clazzSingleton = ClassName.get(packageName, clazzService.simpleName(), "Singleton");
+
+
                 final TypeSpec.Builder tsb = TypeSpec.classBuilder(clazzService)
-                        .addJavadoc("Represents the service of {@link $T}\n", clazzSpi)
+                        .addJavadoc("Represents the service of {@link $T}\n", clazzServiceProviderInterface)
                         .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                        .addSuperinterface(clazzSpi)
+                        .addSuperinterface(clazzServiceProviderInterface)
                         .addType(TypeSpec.classBuilder(clazzSingleton.simpleName())
                                 .addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                                 .addField(FieldSpec.builder(clazzService, "INSTANCE", Modifier.STATIC, Modifier.FINAL)
                                         .initializer("new $T()", clazzService)
                                         .build())
                                 .build())
-                        .addField(FieldSpec.builder(clazzSpi, "mDelegate", Modifier.PRIVATE, Modifier.FINAL)
-                                .initializer("$T.load($T.class).get()", clazzLoader, clazzSpi)
+                        .addField(FieldSpec.builder(clazzServiceProviderInterface, "mDelegate", Modifier.PRIVATE, Modifier.FINAL)
+                                .initializer("$T.load($T.class).get()", clazzServiceLoader, clazzServiceProviderInterface)
                                 .build())
                         .addMethod(MethodSpec.constructorBuilder()
                                 .addModifiers(Modifier.PRIVATE)
@@ -88,10 +94,21 @@ public class ServiceProviderInterfaceProcessor extends AbstractProcessor {
                                 .returns(clazzService)
                                 .build());
 
-                System.out.println("Generate " + clazzService.toString());
+                System.out.println(">>>>>>> Generate:" + clazzService.toString());
 
+                /*
+                 *typeElement.getEnclosedElements():
+                 * 返回该元素直接包含的子元素,通常对一个PackageElement而言，它可以包含TypeElement；
+                 * 对于一个TypeElement而言，它可能包含属性VariableElement，方法ExecutableElement
+                 *
+                 * getEnclosingElement():
+                 * 返回包含该element的父element，与上一个方法相反，
+                 * VariableElement，方法ExecutableElement的父级是TypeElement,
+                 * 而TypeElement的父级是PackageElement
+                 *
+                 */
                 for (final ExecutableElement method : ElementFilter.methodsIn(typeElement.getEnclosedElements())) {
-                    System.out.println(" + " + method);
+                    System.out.println(">>>>>> ExecutableElement method: " + method);
                     final String methodName = method.getSimpleName().toString();
                     final TypeMirror returnType = method.getReturnType();
                     final MethodSpec.Builder msb = MethodSpec.methodBuilder(methodName)
@@ -170,5 +187,15 @@ public class ServiceProviderInterfaceProcessor extends AbstractProcessor {
 
     private String getPackageName(TypeElement typeElement){
         return this.mElementUtils.getPackageOf(typeElement).getQualifiedName().toString();
+    }
+
+    private String getServiceLoaderPackageName(){
+        String currentPackageName=getClass().getPackage().getName();
+        StringBuilder builder=new StringBuilder(currentPackageName);
+        if(currentPackageName!=null&&currentPackageName.lastIndexOf(".processor")!=-1){
+            return builder.substring(0,currentPackageName.length()-9).concat("loader");
+        }
+
+        return currentPackageName;
     }
 }
