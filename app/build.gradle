@@ -46,12 +46,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 //    implementation 'com.fasten:androidPermission:1.0.3'
-    implementation 'com.fasten.component.spi:annotations:1.0.0'
+//    implementation 'com.fasten.component.spi:annotations:1.0.0'
 
 //    annotationProcessor 'com.fasten.component.spi:processor:1.0.0'
 //    annotationProcessor project(':processor')
 
-    implementation 'com.fasten.component.spi:loader:1.0.1'
+//    implementation 'com.fasten.component.spi:loader:1.0.1'
 }
 
 //spi {
