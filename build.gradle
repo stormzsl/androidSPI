@@ -28,7 +28,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
 
         //自定义gradle插件
-        classpath 'com.fasten.component.spi:plugin:1.0.2'
+        classpath 'com.fasten.component.spi:plugin:1.0.4'
     }
 }
 
