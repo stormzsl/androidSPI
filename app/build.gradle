@@ -49,9 +49,9 @@ dependencies {
     implementation 'com.fasten.component.spi:annotations:1.0.0'
 
 //    annotationProcessor 'com.fasten.component.spi:processor:1.0.0'
-    annotationProcessor project(':processor')
+//    annotationProcessor project(':processor')
 
-    implementation 'com.fasten.component.spi:loader:1.0.0'
+    implementation 'com.fasten.component.spi:loader:1.0.1'
 }
 
 //spi {

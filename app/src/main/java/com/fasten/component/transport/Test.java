@@ -1,4 +1,6 @@
 package com.fasten.component.transport;
+import android.util.Log;
+
 import com.fasten.component.spi.annotations.ServiceProvider;
 
 /**
@@ -10,6 +12,6 @@ public class Test implements ITest{
 
     @Override
     public void printMessage(String msg) {
-
+        Log.e("stormzsl",msg);
     }
 }

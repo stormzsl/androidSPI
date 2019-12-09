@@ -1,4 +1,4 @@
-package com.fasten.component.spi.registry;
+package com.fasten.component.spi.loader;
 
 import java.util.Set;
 

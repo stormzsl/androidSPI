@@ -7,7 +7,7 @@ apply from:"${rootDir.absolutePath}/gradle/uploadJarLocalDir.gradle"
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly 'com.fasten.component.spi:registry:1.0.1'
+    compileOnly 'com.fasten.component.spi:registry:1.0.2'
 }
 
 sourceCompatibility = "7"

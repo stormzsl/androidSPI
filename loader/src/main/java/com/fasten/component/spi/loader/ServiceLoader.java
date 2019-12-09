@@ -1,7 +1,5 @@
 package com.fasten.component.spi.loader;
 
-import com.fasten.component.spi.registry.ServiceRegistry;
-
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
