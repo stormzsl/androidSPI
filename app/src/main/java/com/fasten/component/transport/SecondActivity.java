@@ -9,7 +9,6 @@ import com.fasten.component.spi.annotations.ServiceProvider;
 /**
  * 作者:created by storm on 2019-12-08
  */
-@ServiceProvider(SecondActivity.class)
 public class SecondActivity extends Activity {
 
     @Override

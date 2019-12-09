@@ -12,6 +12,9 @@ dependencies {
 
     implementation 'org.javassist:javassist:3.18.2-GA'
     implementation 'com.squareup:javapoet:1.7.0'
+    implementation 'com.fasten.component.spi:loader:1.0.0'
+    implementation 'com.fasten.component.spi:annotations:1.0.0'
+
 }
 
 sourceCompatibility = "7"

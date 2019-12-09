@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
-//apply plugin :'com.fasten.component.spi'
+apply plugin :'com.fasten.component.spi'
 
 android {
     compileSdkVersion 28

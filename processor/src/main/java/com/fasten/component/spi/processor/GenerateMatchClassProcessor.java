@@ -76,74 +76,78 @@ public class GenerateMatchClassProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         for (Element element : roundEnvironment.getElementsAnnotatedWith(ServiceProvider.class)) {
-            if (element instanceof TypeElement) {
-                TypeElement typeElement = (TypeElement) element;
-                ClassName generateClassNme = ClassName.get(getPackageName(typeElement), generateClassName(typeElement));
-                TypeSpec.Builder tsb = TypeSpec.classBuilder(generateClassNme)
-                        .addJavadoc("Represent the class $T of {@link $T}\n",generateClassNme,ClassName.get(typeElement));
+            parseServiceProvider(element);
+        }
+        return false;
+    }
 
-                TypeMirror typeMirror = typeElement.getSuperclass();
-                List<? extends TypeMirror> typeInterfaceMirrors = typeElement.getInterfaces();
-                tsb.superclass(TypeName.get(typeMirror));
-                for (int i = 0; i < typeInterfaceMirrors.size(); i++) {
-                    TypeMirror interfaceMirror = typeInterfaceMirrors.get(i);
-                    tsb.addSuperinterface(TypeName.get(interfaceMirror));
+    private void parseServiceProvider(Element element){
+        if (element instanceof TypeElement) {
+            TypeElement typeElement = (TypeElement) element;
+            ClassName generateClassNme = ClassName.get(getPackageName(typeElement), generateClassName(typeElement));
+            TypeSpec.Builder tsb = TypeSpec.classBuilder(generateClassNme)
+                    .addJavadoc("Represent the class $T of {@link $T}\n",generateClassNme,ClassName.get(typeElement));
+
+            TypeMirror typeMirror = typeElement.getSuperclass();
+            List<? extends TypeMirror> typeInterfaceMirrors = typeElement.getInterfaces();
+            tsb.superclass(TypeName.get(typeMirror));
+            for (int i = 0; i < typeInterfaceMirrors.size(); i++) {
+                TypeMirror interfaceMirror = typeInterfaceMirrors.get(i);
+                tsb.addSuperinterface(TypeName.get(interfaceMirror));
+            }
+
+            for (Element enclosedElement : typeElement.getEnclosedElements()) {
+                if (enclosedElement instanceof VariableElement) {
+                    VariableElement variableElement = (VariableElement) enclosedElement;
+                    TypeMirror variableTypeMirror = variableElement.asType();
+                    printMessage(">>>>>> process variableElement:"+variableElement.getSimpleName().toString());
+                    TypeName typeName = TypeName.get(variableTypeMirror);
+                    String fieldName = variableElement.getSimpleName().toString();
+                    Set<Modifier> modifierSet=variableElement.getModifiers();
+                    Modifier[] modifiers=new Modifier[modifierSet.size()];
+                    FieldSpec fieldSpec = FieldSpec.builder(typeName, fieldName, modifierSet.toArray(modifiers)).build();
+                    tsb.addField(fieldSpec);
                 }
 
-                for (Element enclosedElement : typeElement.getEnclosedElements()) {
-                    if (enclosedElement instanceof VariableElement) {
-                        VariableElement variableElement = (VariableElement) enclosedElement;
-                        TypeMirror variableTypeMirror = variableElement.asType();
-                        printMessage(">>>>>> process variableElement:"+variableElement.getSimpleName().toString());
-                        TypeName typeName = TypeName.get(variableTypeMirror);
-                        String fieldName = variableElement.getSimpleName().toString();
-                        Set<Modifier> modifierSet=variableElement.getModifiers();
-                        Modifier[] modifiers=new Modifier[modifierSet.size()];
-                        FieldSpec fieldSpec = FieldSpec.builder(typeName, fieldName, modifierSet.toArray(modifiers)).build();
-                        tsb.addField(fieldSpec);
+                if (enclosedElement instanceof ExecutableElement&&ElementFilter.methodsIn(typeElement.getEnclosedElements()).contains(enclosedElement)) {
+                    ExecutableElement executableElement = (ExecutableElement) enclosedElement;
+                    TypeMirror executeTypeMirror = executableElement.getReturnType();
+                    printMessage(">>>>>> process executableElement:"+executableElement.getSimpleName().toString());
+                    final String methodName = executableElement.getSimpleName().toString();
+                    final TypeMirror returnType = executableElement.getReturnType();
+                    final MethodSpec.Builder msb = MethodSpec.methodBuilder(methodName)
+                            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                            .addAnnotation(Override.class)
+                            .returns(TypeName.get(returnType));
+
+                    for (final TypeMirror thrownType : executableElement.getThrownTypes()) {
+                        msb.addException(ClassName.get(thrownType));
                     }
 
-                    if (enclosedElement instanceof ExecutableElement&&ElementFilter.methodsIn(typeElement.getEnclosedElements()).contains(enclosedElement)) {
-                        ExecutableElement executableElement = (ExecutableElement) enclosedElement;
-                        TypeMirror executeTypeMirror = executableElement.getReturnType();
-                        printMessage(">>>>>> process executableElement:"+executableElement.getSimpleName().toString());
-                        final String methodName = executableElement.getSimpleName().toString();
-                        final TypeMirror returnType = executableElement.getReturnType();
-                        final MethodSpec.Builder msb = MethodSpec.methodBuilder(methodName)
-                                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                                .addAnnotation(Override.class)
-                                .returns(TypeName.get(returnType));
-
-                        for (final TypeMirror thrownType : executableElement.getThrownTypes()) {
-                            msb.addException(ClassName.get(thrownType));
-                        }
-
-                        final StringBuilder args = new StringBuilder();
-                        final List<? extends VariableElement> parameterTypes = executableElement.getParameters();
-                        for (int i = 0, n = parameterTypes.size(); i < n; i++) {
-                            final String argName = "arg" + i;
-                            msb.addParameter(TypeName.get(parameterTypes.get(i).asType()), argName, Modifier.FINAL);
-                            args.append(argName).append(i < n - 1 ? ", " : "");
-                        }
-
-                        tsb.addMethod(msb.build());
-
+                    final StringBuilder args = new StringBuilder();
+                    final List<? extends VariableElement> parameterTypes = executableElement.getParameters();
+                    for (int i = 0, n = parameterTypes.size(); i < n; i++) {
+                        final String argName = "arg" + i;
+                        msb.addParameter(TypeName.get(parameterTypes.get(i).asType()), argName, Modifier.FINAL);
+                        args.append(argName).append(i < n - 1 ? ", " : "");
                     }
-                }
 
-                try {
-                    JavaFile.builder(getPackageName(typeElement), tsb.build())
-                            .skipJavaLangImports(true)
-                            .addFileComment("Generate file $T,DO NOT MODIFY\n", generateClassNme)
-                            .build().writeTo(mFiler);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    tsb.addMethod(msb.build());
 
+                }
+            }
+
+            try {
+                JavaFile.builder(getPackageName(typeElement), tsb.build())
+                        .skipJavaLangImports(true)
+                        .addFileComment("Generate file $T,DO NOT MODIFY\n", generateClassNme)
+                        .build().writeTo(mFiler);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }
-        return false;
+
     }
 
     private String getPackageName(TypeElement typeElement) {
