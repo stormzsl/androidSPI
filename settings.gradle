@@ -1,7 +1,4 @@
 include ':app'
-include ':testuploadaar'
-include ':testuploadJar'
-include ':testuploadaartojcenter'
 include ':annotations'
 include ':plugin'
 include ':processor'
