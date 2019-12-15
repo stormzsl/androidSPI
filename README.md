@@ -31,5 +31,11 @@
   JCenter仓库地址:https://bintray.com/fastenorg,
   该项目相关的地址:https://bintray.com/beta/#/fastenorg/androidSPI?tab=packages
 ```                                     
-  
+```text
+android基于spi实现方式用法:
+1.在根工程中添加:classpath 'com.fasten.component.spi:plugin:1.0.0'
+
+2.在app主工程中引入插件:apply plugin :'com.fasten.component.spi'
+
+```  
   

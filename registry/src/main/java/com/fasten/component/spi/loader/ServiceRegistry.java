@@ -3,7 +3,7 @@ package com.fasten.component.spi.loader;
 import java.util.Set;
 
 /**
- * 作者:created by storm on 2019-12-07
+ * 作者:created by storm
  */
 
 public abstract class ServiceRegistry {

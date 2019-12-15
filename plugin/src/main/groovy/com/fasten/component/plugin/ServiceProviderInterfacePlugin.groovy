@@ -11,9 +11,8 @@ class ServiceProviderInterfacePlugin implements Plugin<Project>{
     @Override
     void apply(final Project project) {
         project.dependencies {
-//            implementation 'com.fasten.component.spi:loader:1.0.0'
-            implementation 'com.fasten.component.spi:loader:1.0.0'
-            implementation 'com.fasten.component.spi:annotations:1.0.0'
+            api 'com.fasten.component.spi:loader:1.0.0'
+            api 'com.fasten.component.spi:annotations:1.0.0'
         }
 
         project.afterEvaluate {
