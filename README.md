@@ -38,4 +38,14 @@ android基于spi实现方式用法:
 2.在app主工程中引入插件:apply plugin :'com.fasten.component.spi'
 
 ```  
+```text
+1.新建一个密钥: gpg --generate-key
+
+2.查看已生成的密钥:gpg -k
+
+3.导出私钥文件:gpg --export-secret-keys [密钥指纹] > secret.gpg
+
+[gpg博客参考](https://segmentfault.com/a/1190000018026290)
+
+```
   
