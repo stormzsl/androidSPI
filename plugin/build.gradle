@@ -1,10 +1,10 @@
 apply plugin: 'java-library'
 apply plugin: 'groovy'
 // 1.上传到远程仓库
-apply from:"${rootDir.absolutePath}/gradle/pushJarToJCenter.gradle"
+//apply from:"${rootDir.absolutePath}/gradle/pushJarToJCenter.gradle"
 
 //2.上传到本地项目目录
-//apply from:"${rootDir.absolutePath}/gradle/uploadJarLocalDir.gradle"
+apply from:"${rootDir.absolutePath}/gradle/uploadJarLocalDir.gradle"
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation gradleApi()
